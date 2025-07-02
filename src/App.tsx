@@ -23,6 +23,7 @@ import { Tab, Tabs } from "@alfalab/core-components/tabs";
 import { SelectedId } from "@alfalab/core-components/tabs/typings";
 import { Switch } from "@alfalab/core-components/switch";
 import { BottomSheet } from "@alfalab/core-components/bottom-sheet";
+import { sendDataToGA } from "./utils/events.ts";
 
 interface Product {
   title: string;
@@ -91,6 +92,7 @@ export const App = () => {
   const [refill, setRefill] = useState<SelectedId>("Сразу на год");
   const [toggle, setToggle] = useState(true);
   const [expanded, setExpanded] = useState(false);
+  const [isMore, setIsMore] = useState(false);
 
   const handleRefill = (
     _: React.MouseEvent,
@@ -99,13 +101,44 @@ export const App = () => {
     setRefill(selectedId);
   };
 
-  const submit = () => {
+  const getOnlySub = () => {
     window.gtag("event", "5474_get_sub", {
       variant_name: "5474_4",
     });
+  };
 
-    LS.setItem(LSKeys.ShowThx, true);
-    setThx(true);
+  const getInfo = () => {
+    window.gtag("event", "5474_get_info", {
+      variant_name: "5474_4",
+    });
+  };
+
+  const submit = () => {
+    let finalSum: string;
+
+    if (toggle) {
+      if (refill === "Сразу на год") {
+        finalSum = "3 000 ₽";
+      } else {
+        finalSum = "300 ₽";
+      }
+    } else {
+      if (refill === "Сразу на год") {
+        finalSum = "4 000 ₽";
+      } else {
+        finalSum = "400 ₽";
+      }
+    }
+
+    sendDataToGA({
+      is_alfa_smart: toggle ? 1 : 0,
+      is_info_alfa_smart: isMore ? 1 : 0,
+      payment_type: refill,
+      final_sum: finalSum,
+    }).then(() => {
+      LS.setItem(LSKeys.ShowThx, true);
+      setThx(true);
+    });
   };
 
   if (thxShow) {
@@ -179,7 +212,11 @@ export const App = () => {
                   color="secondary"
                   style={{ textDecoration: "underline" }}
                   className={appSt.productText}
-                  onClick={() => setExpanded(true)}
+                  onClick={() => {
+                    setExpanded(true);
+                    getInfo();
+                    setIsMore(true);
+                  }}
                 >
                   Подробнее
                 </Typography.Text>
@@ -409,7 +446,7 @@ export const App = () => {
             padding: "1rem",
             borderRadius: "1rem",
           }}
-          onClick={submit}
+          onClick={getOnlySub}
         >
           <Typography.Text
             view="primary-medium"
