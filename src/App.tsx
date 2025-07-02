@@ -420,7 +420,7 @@ export const App = () => {
                   style={{ color: "#0cc44d" }}
                   className={appSt.productText}
                 >
-                  Сумма выплат +235к
+                  Сумма выплат +235 000 ₽
                 </Typography.Text>
               </>
             )}
