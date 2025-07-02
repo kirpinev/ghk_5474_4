@@ -194,7 +194,7 @@ export const App = () => {
                 weight="bold"
                 className={appSt.productText}
               >
-                С подпиской Альфа-Cмарт скидка +235к
+                +235 000 ₽ к компенсации с подпиской Альфа-Смарт
               </Typography.Text>
               <Gap size={4} />
               <div style={{ display: "flex", gap: "1rem" }}>
@@ -431,7 +431,7 @@ export const App = () => {
               style={{ color: "gray" }}
               className={appSt.productText}
             >
-              Сумма выплат — до {toggle ? "800 000" : "565 000"} ₽
+              Выплаты до {toggle ? "800 000" : "565 000"} ₽
             </Typography.Text>
           </div>
           <img src={arrow} alt="" height={65} />
